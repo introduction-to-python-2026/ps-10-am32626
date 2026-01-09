@@ -2,10 +2,18 @@ from PIL import Image
 import numpy as np
 from scipy.signal import convolve2d
 
+from PIL import Image
+import numpy as np
+from scipy.signal import convolve2d
+
 def load_image(path):
     img = Image.open(path)
     image_np = np.array(img)
-    image_np = 255 - image_np
+    if image_np.dtype == np.uint8:
+        unique_vals = np.unique(image_np)
+        if unique_vals.size == 2 and set(unique_vals.tolist()) <= {0, 255}:
+            return image_np > 128
+
     return image_np
 
 
